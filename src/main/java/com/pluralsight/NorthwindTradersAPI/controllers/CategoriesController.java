@@ -2,34 +2,24 @@ package com.pluralsight.NorthwindTradersAPI.controllers;
 
 import com.pluralsight.NorthwindTradersAPI.models.Category;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
-
+import com.pluralsight.NorthwindTradersAPI.dao.CategoryDao;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @RestController
+@RequestMapping("/categories")
 public class CategoriesController {
 
-    private final List<Category> categories = Arrays.asList(
+    private final CategoryDao categoryDao;
 
-    );
+    @Autowired
+    public CategoriesController(CategoryDao categoryDao) {
+        this.categoryDao = categoryDao;
+    }
 
-    @RequestMapping("/categories")
-    public List<Category> getAllCategories(
-            @RequestParam(required = false) String name) {
-
-        // Filters based on user input
-        List<Category> filteredCategories = categories;
-
-        if (name != null) {
-            filteredCategories = filteredCategories.stream()
-                    .filter(category -> category.getCategoryName().contains(name))
-                    .collect(Collectors.toList());
-        }
-
-        return filteredCategories;
+    @RequestMapping
+    public List<Category> getAllCategories() {
+        return categoryDao.getAll();
     }
 }
